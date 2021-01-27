@@ -16,5 +16,11 @@ const {run} = require('runjs');
   --bundle-output ${bundleDir}/index.android.bundle \\
   --assets-dest ${bundleDir} \\
   --dev false \\`);
+  run(`react-native bundle \\
+  --entry-file ${name}.js \\
+  --platform ios \\
+  --bundle-output ${bundleDir}/index.ios.bundle \\
+  --assets-dest ${bundleDir} \\
+  --dev false \\`);
   run(`cd bundle-server &&  zip -r ${name}.zip ./${name}/`);
 });

@@ -13,10 +13,12 @@ import {
   StatusBar,
   StyleSheet,
   Text,
-  View,
   Image,
   ScrollView,
+  Dimensions,
 } from 'react-native';
+
+const deviceWidth = Dimensions.get('window').width;
 
 const App3 = () => {
   return (
@@ -25,16 +27,22 @@ const App3 = () => {
       <SafeAreaView style={styles.container}>
         <ScrollView>
           <Text>App3</Text>
-          {new Array(10).fill(0).map(() => (
+          {new Array(1).fill(0).map(() => (
             <Image
               source={require('./logo.png')}
-              style={{height: 375, width: 375}}
+              style={{height: deviceWidth, width: deviceWidth}}
             />
           ))}
-          {new Array(10).fill(0).map(() => (
+          {new Array(1).fill(0).map(() => (
             <Image
               source={require('./video.jpg')}
-              style={{height: (375 * 800) / 480, width: 375}}
+              style={{height: (deviceWidth * 800) / 480, width: deviceWidth}}
+            />
+          ))}
+          {new Array(1).fill(0).map(() => (
+            <Image
+              source={require('./inpat.png')}
+              style={{height: deviceWidth, width: deviceWidth}}
             />
           ))}
         </ScrollView>
