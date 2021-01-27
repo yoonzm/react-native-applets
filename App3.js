@@ -27,21 +27,10 @@ const App3 = () => {
       <SafeAreaView style={styles.container}>
         <ScrollView>
           <Text>App3</Text>
+          <Text>这是动态更新的内容</Text>
           {new Array(1).fill(0).map(() => (
             <Image
               source={require('./logo.png')}
-              style={{height: deviceWidth, width: deviceWidth}}
-            />
-          ))}
-          {new Array(1).fill(0).map(() => (
-            <Image
-              source={require('./video.jpg')}
-              style={{height: (deviceWidth * 800) / 480, width: deviceWidth}}
-            />
-          ))}
-          {new Array(1).fill(0).map(() => (
-            <Image
-              source={require('./inpat.png')}
               style={{height: deviceWidth, width: deviceWidth}}
             />
           ))}
