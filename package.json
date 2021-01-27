@@ -8,6 +8,7 @@
     "start": "react-native start",
     "build": "node script/build.js",
     "android-release": "sh script/android-release.sh",
+    "ios-release": "sh script/ios-release.sh",
     "test": "jest",
     "lint": "eslint ."
   },
