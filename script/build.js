@@ -6,10 +6,14 @@
  * Desc:
  */
 const {run} = require('runjs');
+const fs = require('fs'); // 引入fs模块
 
 ['App3'].forEach((name) => {
   const bundleDir = `./bundle-server/${name}`;
-  // run(`mkdir ${bundleDir} || 0`);
+  const exist = fs.existsSync(bundleDir);
+  if (!exist) {
+    run(`mkdir ${bundleDir}`);
+  }
   run(`react-native bundle \\
   --entry-file ${name}.js \\
   --platform android \\
