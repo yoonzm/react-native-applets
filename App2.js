@@ -15,7 +15,6 @@ import {
   Text,
   View,
 } from 'react-native';
-import {title} from './App';
 
 const App2 = () => {
   return (
@@ -24,7 +23,6 @@ const App2 = () => {
       <SafeAreaView style={styles.container}>
         <View style={styles.container}>
           <Text>App2222</Text>
-          <Text>{title}</Text>
         </View>
       </SafeAreaView>
     </>

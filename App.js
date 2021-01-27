@@ -15,6 +15,8 @@ import {
   Button,
   NativeModules,
   ScrollView,
+  Alert,
+  Platform,
 } from 'react-native';
 import {
   CachesDirectoryPath,
@@ -24,9 +26,10 @@ import {
 } from 'react-native-fs';
 import * as ReactNativeZip from 'react-native-zip-archive';
 
-const {AppletModule} = NativeModules;
+const {AppletManager: AppletModule} = NativeModules;
 
-const jsBundleName = 'index.android.bundle';
+const jsBundleName =
+  Platform.OS === 'ios' ? 'index.ios.bundle' : 'index.android.bundle';
 
 export const title = '哈哈哈';
 
@@ -39,39 +42,33 @@ const App = () => {
 
   async function startApplet(componentName) {
     try {
-      if (__DEV__) {
-        AppletModule.startAppletFromComponentName(componentName);
-      } else {
-        let bundleZipName = `${componentName}.zip`;
-        const fromUrl = `http://192.168.10.83:3000/${componentName}.zip`;
-        let toFile = CachesDirectoryPath + '/' + bundleZipName;
-        pushLog('fromUrl:' + fromUrl);
-        pushLog('toFile:' + toFile);
-        await downloadFile({
-          fromUrl,
-          toFile,
-          progress: ({contentLength, bytesWritten}) => {
-            pushLog(
-              'progress:' + Number(bytesWritten / contentLength).toFixed(2),
-            );
-          },
-        }).promise;
-        await ReactNativeZip.unzip(toFile, CachesDirectoryPath);
+      let bundleZipName = `${componentName}.zip`;
+      const fromUrl = `http://192.168.10.83:3000/${componentName}.zip`;
+      let toFile = CachesDirectoryPath + '/' + bundleZipName;
+      pushLog('fromUrl:' + fromUrl);
+      pushLog('toFile:' + toFile);
+      await downloadFile({
+        fromUrl,
+        toFile,
+        progress: ({contentLength, bytesWritten}) => {
+          pushLog(
+            'progress:' + Number(bytesWritten / contentLength).toFixed(2),
+          );
+        },
+      }).promise;
+      await ReactNativeZip.unzip(toFile, CachesDirectoryPath);
 
-        const dirList = await readdir(
-          'file://' + CachesDirectoryPath + '/App3',
-        );
-        pushLog('dirList:' + dirList.join(','));
-        const jsBundleFile =
-          CachesDirectoryPath + '/' + componentName + '/' + jsBundleName;
-        let b = await exists(jsBundleFile);
-        pushLog(`是否存在:${b} - ` + jsBundleFile);
-        if (!b) {
-          return;
-        }
-
-        AppletModule.startAppletFromJSBundle(componentName, jsBundleFile);
+      const dirList = await readdir('file://' + CachesDirectoryPath + '/App3');
+      pushLog('dirList:' + dirList.join(','));
+      const jsBundleFile =
+        CachesDirectoryPath + '/' + componentName + '/' + jsBundleName;
+      let b = await exists(jsBundleFile);
+      pushLog(`是否存在:${b} - ` + jsBundleFile);
+      if (!b) {
+        return;
       }
+
+      AppletModule.startAppletFromJSBundle(componentName, jsBundleFile);
     } catch (error) {
       console.error('捕获错误', error);
       pushLog('捕获错误:' + error.message);
@@ -85,7 +82,12 @@ const App = () => {
         <Button
           title="startApplet3 local"
           onPress={() => {
-            AppletModule.startAppletFromComponentName('App3');
+            // console.log(NativeModules);
+            if (!__DEV__) {
+              Alert.alert('温馨提示', '只支持开发模式使用');
+              return;
+            }
+            AppletModule.startAppletFromComponentName();
           }}
         />
         <Button
