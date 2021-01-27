@@ -58,4 +58,5 @@ buck-out/
 # CocoaPods
 /ios/Pods/
 
-bundle-server/
+bundle-server/App3
+bundle-server/App3.*
