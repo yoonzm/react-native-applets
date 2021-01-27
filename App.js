@@ -17,6 +17,9 @@ import {
   ScrollView,
   Alert,
   Platform,
+  DeviceEventEmitter,
+  NativeAppEventEmitter,
+  AsyncStorage,
 } from 'react-native';
 import {
   CachesDirectoryPath,
@@ -26,8 +29,11 @@ import {
 } from 'react-native-fs';
 import * as ReactNativeZip from 'react-native-zip-archive';
 
-const {AppletManager: AppletModule} = NativeModules;
+const {AppletManager: iosAppletModule} = NativeModules;
+const {AppletModule: androidAppletModule} = NativeModules;
 
+const AppletModule =
+  Platform.OS === 'ios' ? iosAppletModule : androidAppletModule;
 const jsBundleName =
   Platform.OS === 'ios' ? 'index.ios.bundle' : 'index.android.bundle';
 
@@ -35,6 +41,15 @@ export const title = '哈哈哈';
 
 const App = () => {
   const [logs, setLogs] = React.useState([]);
+
+  React.useEffect(() => {
+    DeviceEventEmitter.addListener('DeviceEvent', (e) => {
+      console.log('DeviceEventEmitter.addListener', e);
+    });
+    NativeAppEventEmitter.addListener('NativeAppEvent', (e) => {
+      console.log('NativeAppEvent.addListener', e);
+    });
+  }, []);
 
   function pushLog(log) {
     setLogs((items) => [...items, log]);
@@ -87,13 +102,21 @@ const App = () => {
               Alert.alert('温馨提示', '只支持开发模式使用');
               return;
             }
-            AppletModule.startAppletFromComponentName();
+            AppletModule.startAppletFromComponentName('App3');
           }}
         />
         <Button
           title="startApplet3 remote"
           onPress={() => {
             startApplet('App3');
+          }}
+        />
+        <Button
+          title="getStorage"
+          onPress={() => {
+            AsyncStorage.getItem('storage_key').then((res) => {
+              console.log('.()', res);
+            });
           }}
         />
         <ScrollView>
